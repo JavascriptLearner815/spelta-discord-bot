@@ -32,7 +32,7 @@ module.exports = {
 		}
 		catch (error) {
 			console.error(error)
-			interaction.reply({ content: "Error! Either the recipient or yourself has disabled DMs!", ephemeral: true })
+			interaction.reply({ content: "Error! Either you or the recipient has disabled DMs!", ephemeral: true })
 		}
 	},
 }
