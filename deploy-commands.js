@@ -5,10 +5,24 @@ const { Routes } = require("discord-api-types/v9")
 const { clientId, guildId, token } = require("./config.json")
 const rest = new REST({ version: "9" }).setToken(token)
 
+let commands = []
+const commandsPath = path.join(__dirname, "commands")
+let commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith(".js"))
+
+for (const file of commandFiles) {
+	const filePath = path.join(commandsPath, file)
+	const command = require(filePath)
+	commands.push(command.data.toJSON())
+}
+
+
+rest.put(Routes.applicationGuildCommands(clientId, guildId), { body: commands })
+	.then(() => console.log("Successfully registered bot commands."))
+	.catch(console.error)
+
 setInterval(() => {
-	const commands = []
-	const commandsPath = path.join(__dirname, "commands")
-	const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith(".js"))
+	commands = []
+	commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith(".js"))
 
 	for (const file of commandFiles) {
 		const filePath = path.join(commandsPath, file)
